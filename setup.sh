@@ -1,4 +1,5 @@
 #!/bin/bash
+source ./config.sh
 
 error() {
 	local lineno="$1"
@@ -43,7 +44,7 @@ tasksel install ubuntu-desktop-minimal ubuntu-desktop-minimal-default-languages
 # Install tools needed for management and monitoring
 
 apt -y install net-tools openssh-server ansible xvfb tinc i3lock oathtool imagemagick \
-	zabbix-agent
+	zabbix-agent aria2
 
 # Install local build tools
 
@@ -62,7 +63,7 @@ snap install --classic code
 snap install --classic sublime-text
 
 # Install Eclipse
-wget -O /tmp/eclipse.tar.gz "http://mirrors.neusoft.edu.cn/eclipse/technology/epp/downloads/release/2020-12/R/eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz"
+aria2c -x4 -d /tmp -o eclipse.tar.gz "https://ftp.yz.yamagata-u.ac.jp/pub/eclipse/technology/epp/downloads/release/2020-12/R/eclipse-cpp-2020-12-R-linux-gtk-x86_64.tar.gz"
 tar zxf /tmp/eclipse.tar.gz -C /opt
 rm /tmp/eclipse.tar.gz
 wget -O /usr/share/pixmaps/eclipse.png "https://icon-icons.com/downloadimage.php?id=94656&root=1381/PNG/64/&file=eclipse_94656.png"
@@ -83,23 +84,24 @@ sed -i '/^SHELL/ s/\/sh$/\/bash/' /etc/default/useradd
 
 # Copy IOI stuffs into /opt
 
-mkdir /opt/ioi
+mkdir -p /opt/ioi
 cp -a bin sbin misc /opt/ioi/
 cp config.sh /opt/ioi/
-mkdir /opt/ioi/run
-mkdir /opt/ioi/store
-mkdir /opt/ioi/config
-mkdir /opt/ioi/store/log
-mkdir /opt/ioi/store/screenshots
-mkdir /opt/ioi/store/submissions
-mkdir /opt/ioi/config/ssh
+mkdir -p /opt/ioi/run
+mkdir -p /opt/ioi/store
+mkdir -p /opt/ioi/config
+mkdir -p /opt/ioi/store/log
+mkdir -p /opt/ioi/store/screenshots
+mkdir -p /opt/ioi/store/submissions
+mkdir -p /opt/ioi/config/ssh
 
 ## Lines with 2 hashtags are permanently commented out!
-wget -O /tmp/cpptools-linux.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/cpptools-linux.vsix"
-wget -O /tmp/cpp-compile-run.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/danielpinto8zz6.c-cpp-compile-run-1.0.11.vsix"
+aria2c -x 4 -d /tmp/ -o cpptools-linux.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/cpptools-linux.vsix"
+aria2c -x 4 -d /tmp -o cpp-compile-run.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/danielpinto8zz6.c-cpp-compile-run-1.0.11.vsix"
 wget -O /tmp/vscodevim.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/vscodevim.vim-1.16.0.vsix"
 ##wget -O /tmp/ms-python.vsix "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/ms-python/vsextensions/python/2020.7.96456/vspackage"
 ##gunzip /tmp/ms-python.vsix.gz
+rm -rf /tmp/vscode
 mkdir /tmp/vscode
 mkdir /tmp/vscode-extensions
 code --install-extension /tmp/cpptools-linux.vsix --extensions-dir /tmp/vscode-extensions --user-data-dir /tmp/vscode
@@ -163,7 +165,7 @@ update-grub2
 
 # Setup SSH authorized keys and passwordless sudo for ansible
 
-mkdir ~ansible/.ssh
+mkdir -p ~ansible/.ssh
 cp misc/id_ansible.pub ~ansible/.ssh/authorized_keys
 chown -R ansible.ansible ~ansible/.ssh
 
@@ -179,8 +181,8 @@ apt -y install stl-manual python3-doc
 # CPP Reference
 
 wget -O /tmp/html_book_20190607.zip http://upload.cppreference.com/mwiki/images/b/b2/html_book_20190607.zip
-mkdir /opt/cppref
-unzip /tmp/html_book_20190607.zip -d /opt/cppref
+mkdir -p /opt/cppref
+unzip -o /tmp/html_book_20190607.zip -d /opt/cppref
 rm -f /tmp/html_book_20190607.zip
 
 # Build logkeys
@@ -238,35 +240,37 @@ rm /tmp/share.zip
 
 # Setup tinc skeleton config
 
-mkdir /etc/tinc/vpn
-mkdir /etc/tinc/vpn/hosts
+mkdir -p /etc/tinc/vpn
+mkdir -p /etc/tinc/vpn/hosts
 cat - <<'EOM' > /etc/tinc/vpn/tinc-up
 #!/bin/sh
 
 ifconfig $INTERFACE "$(cat /etc/tinc/vpn/ip.conf)" netmask "$(cat /etc/tinc/vpn/mask.conf)"
-route add -net 172.31.0.0/16 gw "$(cat /etc/tinc/vpn/ip.conf)"
+route add -net 10.10.0.0/16 gw "$(cat /etc/tinc/vpn/ip.conf)"
 EOM
 chmod 755 /etc/tinc/vpn/tinc-up
+cp /etc/tinc/vpn/tinc-up /opt/ioi/misc/
 
 cat - <<'EOM' > /etc/tinc/vpn/host-up
 #!/bin/sh
-
+source /opt/ioi/config.sh
 logger -p local0.info TINC: VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is up
 
 # Force time resync as soon as VPN starts
 systemctl restart systemd-timesyncd
 
 # Fix up DNS resolution
-resolvectl dns vpn 172.31.0.2
-resolvectl domain vpn ioi2021.sg
+resolvectl dns vpn ${DNS_SERVER}
+resolvectl domain vpn ${DNS_DOMAIN}
 systemd-resolve --flush-cache
 
 # Register something on our HTTP server to log connection
 INSTANCEID=$(cat /opt/ioi/run/instanceid.txt)
-wget -qO- https://test.ioi2021.sg/ping/$NODE-$NAME-$INSTANCEID &> /dev/null
-wget -qO- https://pop.ioi2021.sg/ping/$NODE-$NAME-$INSTANCEID &> /dev/null
+wget -qO- ${PING_URL}/$NODE-$NAME-$INSTANCEID &> /dev/null
+wget -qO- ${PING_URL2}/$NODE-$NAME-$INSTANCEID &> /dev/null
 EOM
 chmod 755 /etc/tinc/vpn/host-up
+cp /etc/tinc/vpn/host-up /opt/ioi/misc/
 
 cat - <<'EOM' > /etc/tinc/vpn/host-down
 #!/bin/sh
@@ -274,6 +278,8 @@ cat - <<'EOM' > /etc/tinc/vpn/host-down
 logger -p local0.info VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is down
 EOM
 chmod 755 /etc/tinc/vpn/host-down
+cp /etc/tinc/vpn/host-down /opt/ioi/misc/
+
 
 # Configure systemd for tinc
 systemctl enable tinc@vpn
@@ -343,7 +349,7 @@ snap list --all | awk '/disabled/{print $1, $3}' | while read snapname revision;
 	snap remove "$snapname" --revision="$revision"
 done
 
-rm /var/lib/snapd/cache/*
+rm -rf /var/lib/snapd/cache/*
 
 # Clean up apt
 
@@ -352,8 +358,8 @@ apt -y autoremove
 apt clean
 
 # Remove desktop backgrounds
-rm /usr/share/backgrounds/*.jpg
-rm /usr/share/backgrounds/*.png
+rm -rf /usr/share/backgrounds/*.jpg
+rm -rf /usr/share/backgrounds/*.png
 
 # Remove unwanted documentation
 rm -rf /usr/share/doc/HTML
@@ -393,7 +399,7 @@ chmod 755 /etc/rc.local
 if [ ! -e ~/.ssh ]; then
 	mkdir ~/.ssh
 fi
-ssh-keyscan -H ioibackup1.ioi2021.sg >> ~/.ssh/known_hosts 2> /dev/null
+ssh-keyscan -H ${BACKUP_SERVER} >> ~/.ssh/known_hosts 2> /dev/null
 chmod 600 ~/.ssh/known_hosts
 
 # Set flag to run atrun.sh at first boot
