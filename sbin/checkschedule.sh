@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/bin/bash
 
-SERVER=https://pop.ioi2021.sg/config
+source /opt/ioi/config.sh
+
 
 if [ -f /opt/ioi/misc/schedule2.txt.firstrun ]; then
 	/opt/ioi/sbin/atrun.sh schedule

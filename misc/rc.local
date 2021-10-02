@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-SERVER=https://pop.ioi2021.sg/config
+source /otp/ioi/config.sh	
 
 check_user()
 {

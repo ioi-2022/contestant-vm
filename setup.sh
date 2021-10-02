@@ -85,6 +85,7 @@ sed -i '/^SHELL/ s/\/sh$/\/bash/' /etc/default/useradd
 
 mkdir /opt/ioi
 cp -a bin sbin misc /opt/ioi/
+cp config.sh /opt/ioi/
 mkdir /opt/ioi/run
 mkdir /opt/ioi/store
 mkdir /opt/ioi/config
