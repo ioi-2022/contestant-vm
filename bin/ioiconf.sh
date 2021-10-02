@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 check_ip()
 {
@@ -39,10 +39,13 @@ do_config()
 		rm -r $WORKDIR
 		exit 1
 	fi
+	mkdir -p /etc/tinc/vpn/hosts
 
 	echo "$IP" > /etc/tinc/vpn/ip.conf
 	echo "$MASK" > /etc/tinc/vpn/mask.conf
 	rm /etc/tinc/vpn/hosts/* 2> /dev/null
+	cp /opt/ioi/misc/tinc-{up,down} /etc/tinc/vpn
+	chmod +x /etc/tinc/vpn/tinc-{up,down}
 	cp $WORKDIR/vpn/hosts/* /etc/tinc/vpn/hosts/
 	cp $WORKDIR/vpn/rsa_key.* /etc/tinc/vpn/
 	cp $WORKDIR/vpn/tinc.conf /etc/tinc/vpn
@@ -153,8 +156,8 @@ EOM
 		if [ -f "/usr/share/zoneinfo/$2" ]; then
 			cat - <<EOM
 Your timezone will be set to $2 at your next login.
-*** Please take note that all dates and times communicated by the IOI 2021 ***
-*** organisers will be in Asia/Singapore timezone (GMT+08), unless it is   ***
+*** Please take note that all dates and times communicated by the ${EVENTNAME} ***
+*** organisers will be in Asia/Jakarta timezone (GMT+07), unless it is   ***
 *** otherwise specified.                                                   ***
 EOM
 			echo "$2" > /opt/ioi/config/timezone
