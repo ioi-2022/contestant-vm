@@ -1,6 +1,8 @@
 EVENT_NAME="IOI 2022"
-SERVER="http://192.168.1.162/pop-config/"
-DOMAIN=riscv.id
-BACKUP_SERVER="riscv.id"
+SERVER="http://toki.riscv.id/pop-config/"
+#for ping check
+DOMAIN=toki.riscv.id
+DNS_DOMAIN=riscv.id
+BACKUP_SERVER="backup.riscv.id"
 SUBNET="10.10.0.0/16"
 
