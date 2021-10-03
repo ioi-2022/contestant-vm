@@ -252,7 +252,7 @@ chmod 755 /etc/tinc/vpn/tinc-up
 cp /etc/tinc/vpn/tinc-up /opt/ioi/misc/
 
 cat - <<'EOM' > /etc/tinc/vpn/host-up
-#!/bin/sh
+#!/bin/bash
 source /opt/ioi/config.sh
 logger -p local0.info TINC: VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is up
 
@@ -260,8 +260,8 @@ logger -p local0.info TINC: VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT i
 systemctl restart systemd-timesyncd
 
 # Fix up DNS resolution
-resolvectl dns vpn ${DNS_SERVER}
-resolvectl domain vpn ${DNS_DOMAIN}
+resolvectl dns $INTERFACE ${DNS_SERVER}
+resolvectl domain $INTERFACE ${DNS_DOMAIN}
 systemd-resolve --flush-cache
 
 # Register something on our HTTP server to log connection
