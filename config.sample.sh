@@ -1,4 +1,3 @@
-EVENT_NAME="IOI 2022"
 SERVER="http://toki.riscv.id/pop-config/"
 #for ping check
 DOMAIN=toki.riscv.id
