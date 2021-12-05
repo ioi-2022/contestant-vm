@@ -262,8 +262,8 @@ logger -p local0.info TINC: VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT i
 systemctl restart systemd-timesyncd
 
 # Fix up DNS resolution
-resolvectl dns $INTERFACE "$(cat /etc/tinc/vpn/dns.conf)"
-resolvectl domain $INTERFACE ${DNS_DOMAIN}
+resolvectl dns $INTERFACE $(cat /etc/tinc/vpn/dns.conf)
+resolvectl domain $INTERFACE $DNS_DOMAIN
 systemd-resolve --flush-cache
 
 # Register something on our HTTP server to log connection
