@@ -16,7 +16,7 @@
 -A OUTPUT -p tcp -m tcp --dport 53 -j ACCEPT
 -A OUTPUT -p udp -m udp --dport 53 -j ACCEPT
 -A OUTPUT -p udp -m udp --dport 123 -j ACCEPT
--A OUTPUT -p tcp -m tcp -m multiport -d 10.10.0.0/16 --dports 22,80,443,10051 -j ACCEPT
+-A OUTPUT -p tcp -m tcp -m multiport -d {SUBNET} --dports 22,80,443,10051 -j ACCEPT
 -A OUTPUT -p tcp -m tcp -m multiport -d {BACKUP_SERVER} --dports 22,80,443 -j ACCEPT
 -A OUTPUT -p tcp -m tcp -m multiport -d {DOMAIN} --dports 80,443 -j ACCEPT
 COMMIT

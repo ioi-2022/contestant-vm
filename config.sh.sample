@@ -4,6 +4,6 @@ DOMAIN=toki.riscv.id
 DNS_SERVER="10.10.0.1"
 DNS_DOMAIN=riscv.id
 BACKUP_SERVER="backup.riscv.id"
-SUBNET="10.10.0.0/16"
+SUBNET="10.0.0.0/24"
 PING_URL="http://toki.riscv.id/ping/"
 PING_URL2="http://toki.riscv.id/ping2"

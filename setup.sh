@@ -243,16 +243,18 @@ rm /tmp/share.zip
 mkdir -p /etc/tinc/vpn
 mkdir -p /etc/tinc/vpn/hosts
 cat - <<'EOM' > /etc/tinc/vpn/tinc-up
-#!/bin/sh
+#!/bin/bash
 
+source /opt/ioi/config.sh
 ifconfig $INTERFACE "$(cat /etc/tinc/vpn/ip.conf)" netmask "$(cat /etc/tinc/vpn/mask.conf)"
-route add -net 10.10.0.0/16 gw "$(cat /etc/tinc/vpn/ip.conf)"
+route add -net $SUBNET gw "$(cat /etc/tinc/vpn/ip.conf)"
 EOM
 chmod 755 /etc/tinc/vpn/tinc-up
 cp /etc/tinc/vpn/tinc-up /opt/ioi/misc/
 
 cat - <<'EOM' > /etc/tinc/vpn/host-up
 #!/bin/bash
+
 source /opt/ioi/config.sh
 logger -p local0.info TINC: VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is up
 
@@ -273,7 +275,7 @@ chmod 755 /etc/tinc/vpn/host-up
 cp /etc/tinc/vpn/host-up /opt/ioi/misc/
 
 cat - <<'EOM' > /etc/tinc/vpn/host-down
-#!/bin/sh
+#!/bin/bash
 
 logger -p local0.info VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is down
 EOM
