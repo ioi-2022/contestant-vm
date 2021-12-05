@@ -39,15 +39,10 @@ do_config()
 		rm -r $WORKDIR
 		exit 1
 	fi
-	mkdir -p /etc/tinc/vpn/hosts
 
 	echo "$IP" > /etc/tinc/vpn/ip.conf
 	echo "$MASK" > /etc/tinc/vpn/mask.conf
 	rm /etc/tinc/vpn/hosts/* 2> /dev/null
-	cp /opt/ioi/misc/tinc-{up,down} /etc/tinc/vpn
-	cp /opt/ioi/misc/host-{up,down} /etc/tinc/vpn
-	chmod +x /etc/tinc/vpn/tinc-{up,down}
-	chmod +x /etc/tinc/vpn/host-{up,down}
 	cp $WORKDIR/vpn/hosts/* /etc/tinc/vpn/hosts/
 	cp $WORKDIR/vpn/rsa_key.* /etc/tinc/vpn/
 	cp $WORKDIR/vpn/tinc.conf /etc/tinc/vpn

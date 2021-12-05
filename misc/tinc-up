@@ -1,2 +1,0 @@
-#!/bin/sh
-ifconfig $INTERFACE $(cat /etc/tinc/vpn/ip.conf) netmask $(cat /etc/tinc/vpn/mask.conf)

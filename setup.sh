@@ -278,8 +278,6 @@ cat - <<'EOM' > /etc/tinc/vpn/host-down
 logger -p local0.info VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is down
 EOM
 chmod 755 /etc/tinc/vpn/host-down
-cp /etc/tinc/vpn/host-down /opt/ioi/misc/
-
 
 # Configure systemd for tinc
 systemctl enable tinc@vpn
