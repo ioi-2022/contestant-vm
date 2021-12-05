@@ -1,10 +1,5 @@
 POP_SERVER="pop.toki.id"
 BACKUP_SERVER="backup.toki.id"
-
-#for ping check
-DOMAIN=toki.riscv.id
 DNS_SERVER="10.10.0.1"
 DNS_DOMAIN=riscv.id
 SUBNET="10.0.0.0/24"
-PING_URL="http://toki.riscv.id/ping/"
-PING_URL2="http://toki.riscv.id/ping2"
