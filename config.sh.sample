@@ -1,4 +1,4 @@
-SERVER="http://toki.riscv.id/pop-config/"
+POP_SERVER="pop.toki.id"
 #for ping check
 DOMAIN=toki.riscv.id
 DNS_SERVER="10.10.0.1"

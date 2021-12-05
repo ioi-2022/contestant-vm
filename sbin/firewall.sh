@@ -4,7 +4,9 @@ source /opt/ioi/config.sh
 
 case "$1" in
 	start)
-		cat /opt/ioi/misc/iptables.save | sed -e 's/{DOMAIN}/'${DOMAIN}'/g' | sed -e 's/{BACKUP_SERVER}/'${BACKUP_SERVER}'/g' | \
+		cat /opt/ioi/misc/iptables.save | \
+			sed -e 's/{POP_SERVER}/'${POP_SERVER}'/g' | \
+			sed -e 's/{BACKUP_SERVER}/'${BACKUP_SERVER}'/g' | \
 			sed -e 's#{SUBNET}#'${SUBNET}'#g' | tee|iptables-restore
 		;;
 	stop)
