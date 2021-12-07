@@ -324,6 +324,26 @@ EOM
 # Use a different config for Zabbix
 sed -i '/^Environment=/ s/zabbix_agentd.conf/zabbix_agentd_ioi.conf/' /lib/systemd/system/zabbix-agent.service
 
+echo "$ZABBIX_PSK" > /etc/zabbix/psk-autoregistration.txt
+
+cat - <<EOM > /etc/zabbix/zabbix_agentd_ioi.conf
+PidFile=/var/run/zabbix/zabbix_agentd.pid
+LogFile=/var/log/zabbix/zabbix_agentd.log
+LogFileSize=0
+Server=SERVER
+ServerActive=SERVER
+Hostname=HOSTNAME
+TLSConnect=psk
+TLSAccept=psk
+TLSPSKIdentity=contestantvm
+TLSPSKFile=/etc/zabbix/psk-autoregistration.txt
+UserParameter=agent.ioiversion,cat /opt/ioi/misc/VERSION
+UserParameter=agent.vminstance,cat /opt/ioi/run/instanceid.txt
+EOM
+
+sed -i '/^Server=/ s/SERVER/'$ZABBIX_SERVER'/' /etc/zabbix/zabbix_agentd_ioi.conf
+sed -i '/^ServerActive=/ s/SERVER/'$ZABBIX_SERVER'/' /etc/zabbix/zabbix_agentd_ioi.conf
+
 # Remove/clean up unneeded snaps
 
 snap list --all | awk '/disabled/{print $1, $3}' | while read snapname revision; do
