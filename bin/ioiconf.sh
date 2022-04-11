@@ -54,8 +54,6 @@ do_config()
 	USERID=$(cat /etc/tinc/vpn/tinc.conf | grep Name | cut -d\  -f3)
 	chfn -f "$USERID" ioi
 
-	sed -i '/^Hostname=/ s/HOSTNAME/'$USERID'/' /etc/zabbix/zabbix_agentd_ioi.conf
-
 	# Stop Zabbix agent
 	systemctl stop zabbix-agent 2> /dev/null
 	systemctl disable zabbix-agent 2> /dev/null
