@@ -6,6 +6,7 @@ ZENARG='--width=300'
 ZENTITLE='--title=IOI Setup'
 
 USERID=
+CRED=
 
 main()
 {
