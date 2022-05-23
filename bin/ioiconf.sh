@@ -214,6 +214,7 @@ EOM
 		cp /opt/ioi/misc/id_ansible.pub /home/ansible/.ssh/authorized_keys
 		chmod 600 /home/ansible/.ssh/authorized_keys
 		chown ansible:ansible /home/ansible/.ssh/authorized_keys
+		exit 0
 		;;
 	*)
 		echo Not allowed
