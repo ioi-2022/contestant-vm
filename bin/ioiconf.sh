@@ -222,8 +222,8 @@ EOM
 		exit 0
 		;;
 	keyscan)
-		mkdir /root/.ssh
-		ssh-keyscan -H ${BACKUP_SERVER} >> /root/.ssh/known_hosts 2> /dev/null
+		mkdir -p /root/.ssh
+		ssh-keyscan -H ${BACKUP_SERVER} > /root/.ssh/known_hosts 2> /dev/null
 		chmod 600 /root/.ssh/known_hosts
 		;;
 	*)
