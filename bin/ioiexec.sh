@@ -15,7 +15,8 @@ CMDSTRING=$*
 
 FULLKEY=$(echo $PARTKEY $CMDSTRING | sha256sum | cut -d\  -f1)
 
-if ! oathtool -s 600 --totp $FULLKEY -d 8 -w 1 -- "$TOTP" > /dev/null 2>&1; then
+# totp interval set to 30 minutes
+if ! oathtool -s 1800 --totp $FULLKEY -d 8 -w 1 -- "$TOTP" > /dev/null 2>&1; then
 	echo "TOTP failed" >&2
 	exit;
 fi
@@ -30,7 +31,6 @@ case $1 in
 	vpnclear)
 		systemctl stop tinc@vpn
 		systemctl disable tinc@vpn 2> /dev/null
-		/opt/ioi/sbin/firewall.sh stop
 		rm /etc/tinc/vpn/ip.conf 2> /dev/null
 		rm /etc/tinc/vpn/mask.conf 2> /dev/null
 		rm /etc/tinc/vpn/dns.conf 2> /dev/null
@@ -39,6 +39,13 @@ case $1 in
 		rm /etc/tinc/vpn/tinc.conf 2> /dev/null
 		rm /opt/ioi/config/ssh/ioibackup* 2> /dev/null
 		chfn -f "" ioi
+		echo "Due to some issues, we have disabled VPN connection to CMS."
+		echo ""
+		echo "For now, open https://cms-public.ioi2022.id on Firefox,"
+		echo "and log in using the following credentials:"
+		echo ""
+		echo "- Username: $(cat /opt/ioi/run/username.txt)"
+		echo "- Password: $(cat /opt/ioi/run/password.txt)"
 		;;
 esac
 
