@@ -1,4 +1,4 @@
-# contestan-vm
+# IOI Contestant VM
 
 ## Install/Setup
 
