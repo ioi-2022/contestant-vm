@@ -95,14 +95,16 @@ mkdir -p /opt/ioi/store/screenshots
 mkdir -p /opt/ioi/store/submissions
 mkdir -p /opt/ioi/config/ssh
 
-aria2c -x 4 -d /tmp/ -o cpptools-linux.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/cpptools-linux.vsix"
-aria2c -x 4 -d /tmp -o cpp-compile-run.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/danielpinto8zz6.c-cpp-compile-run-1.0.11.vsix"
-wget -O /tmp/vscodevim.vsix "http://mirror.nus.edu.sg/ioi2021/vscode-items/vscodevim.vim-1.16.0.vsix"
+aria2c -x 4 -d /tmp -o cpptools-linux.vsix "https://github.com/microsoft/vscode-cpptools/releases/download/v1.10.7/cpptools-linux.vsix"
+aria2c -x 4 -d /tmp -o cpp-compile-run.vsix "https://github.com/danielpinto8zz6/c-cpp-compile-run/releases/download/v1.0.15/c-cpp-compile-run-1.0.15.vsix"
+aria2c -x 4 -d /tmp -o intellij-idea-keybindings.vsix "https://github.com/kasecato/vscode-intellij-idea-keybindings/releases/download/v1.5.1/intellij-idea-keybindings-1.5.1.vsix"
+wget -O /tmp/vscodevim.vsix "https://github.com/VSCodeVim/Vim/releases/download/v1.23.0/vim-1.23.0.vsix"
 rm -rf /tmp/vscode
 mkdir /tmp/vscode
 mkdir /tmp/vscode-extensions
 code --install-extension /tmp/cpptools-linux.vsix --extensions-dir /tmp/vscode-extensions --user-data-dir /tmp/vscode
 code --install-extension /tmp/cpp-compile-run.vsix --extensions-dir /tmp/vscode-extensions --user-data-dir /tmp/vscode
+code --install-extension /tmp/intellij-idea-keybindings.vsix --extensions-dir /tmp/vscode-extensions --user-data-dir /tmp/vscode
 tar jcf /opt/ioi/misc/vscode-extensions.tar.bz2 -C /tmp/vscode-extensions .
 cp /tmp/vscodevim.vsix /opt/ioi/misc
 rm -rf /tmp/vscode-extensions
