@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source /otp/ioi/config.sh	
+source /opt/ioi/config.sh
 
 check_user()
 {
