@@ -2,3 +2,5 @@
 VERSION=""
 # Set a password, also used in GRUB. Otherwise we'll default to ansible.
 ANSIBLE_PASSWD=""
+# Set local timezone
+IOI_TIMEZONE=""

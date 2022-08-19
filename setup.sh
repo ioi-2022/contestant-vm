@@ -16,6 +16,7 @@ trap 'error ${LINENO}' ERR
 
 VERSION="test$(date +%m%d)"
 ANSIBLE_PASSWD="ansible"
+IOI_TIMEZONE="Asia/Jakarta"
 
 if [ -f "config.local.sh" ]; then
 	source config.local.sh
@@ -108,7 +109,7 @@ cp /tmp/vscodevim.vsix /opt/ioi/misc
 rm -rf /tmp/vscode-extensions
 
 # Add default timezone
-echo "Asia/Jakarta" > /opt/ioi/config/timezone
+echo "$IOI_TIMEZONE" > /opt/ioi/config/timezone
 
 # Default to enable screensaver lock
 touch /opt/ioi/config/screenlock
