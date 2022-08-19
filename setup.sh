@@ -14,6 +14,8 @@ error() {
 }
 trap 'error ${LINENO}' ERR
 
+
+# Initialize default version and ansible password
 VERSION="test$(date +%m%d)"
 ANSIBLE_PASSWD="ansible"
 
@@ -27,7 +29,7 @@ timedatectl set-timezone Asia/Jakarta
 vmware-toolbox-cmd timesync enable
 hwclock -w
 
-# Install zabbix repo
+# Install zabbix agent on VM
 wget -O /tmp/zabbix-release_5.0-1+focal_all.deb https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+focal_all.deb
 dpkg -i /tmp/zabbix-release_5.0-1+focal_all.deb
 
@@ -95,6 +97,8 @@ mkdir -p /opt/ioi/store/screenshots
 mkdir -p /opt/ioi/store/submissions
 mkdir -p /opt/ioi/config/ssh
 
+
+# install vscode extensions
 aria2c -x 4 -d /tmp -o cpptools-linux.vsix "https://github.com/microsoft/vscode-cpptools/releases/download/v1.10.7/cpptools-linux.vsix"
 aria2c -x 4 -d /tmp -o cpp-compile-run.vsix "https://github.com/danielpinto8zz6/c-cpp-compile-run/releases/download/v1.0.15/c-cpp-compile-run-1.0.15.vsix"
 wget -O /tmp/vscodevim.vsix "https://github.com/VSCodeVim/Vim/releases/download/v1.23.0/vim-1.23.0.vsix"
@@ -277,7 +281,7 @@ cp /etc/tinc/vpn/host-up /opt/ioi/misc/
 cat - <<'EOM' > /etc/tinc/vpn/host-down
 #!/bin/bash
 
-logger -p local0.info VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is down
+logger -p local0.info TINC: VPN connection to $NODE $REMOTEADDRESS:$REMOTEPORT is down
 EOM
 chmod 755 /etc/tinc/vpn/host-down
 
@@ -289,7 +293,7 @@ systemctl disable multipathd
 # Disable cloud-init
 touch /etc/cloud/cloud-init.disabled
 
-# Don't stsart atd service
+# Don't start atd service
 systemctl disable atd
 
 # Replace atd.service file
