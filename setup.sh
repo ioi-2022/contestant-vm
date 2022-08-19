@@ -24,7 +24,7 @@ fi
 
 # Fix up date/time
 
-timedatectl set-timezone Asia/Jakarta
+timedatectl set-timezone $IOI_TIMEZONE
 vmware-toolbox-cmd timesync enable
 hwclock -w
 
