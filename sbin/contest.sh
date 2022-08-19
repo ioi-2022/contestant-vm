@@ -121,6 +121,8 @@ EOM
 }
 
 
+logger -p local0.info "CONTEST: execute '$@'"
+
 case "$1" in
 	lock)
 		lock
